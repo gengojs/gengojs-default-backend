@@ -1,2 +1,2 @@
 # gengojs-default-backend
-The default backend plugin for gengojs
+The default memory backend plugin for gengojs
