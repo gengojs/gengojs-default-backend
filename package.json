@@ -1,5 +1,5 @@
 {
-  "name": "gengojs-default-backend",
+  "name": "gengojs-default-memory",
   "version": "0.0.1-beta.1",
   "description": "The default memory backend plugin for gengojs",
   "main": "index.js",
