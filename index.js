@@ -1,124 +1,128 @@
-/**
- * Takeshi Iwana aka iwatakeshi
- * MIT 2015
- * Memory
- * This module loads all files into memory at once.
- */
+'use strict';
 
-/* Dependencies */
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
 
-var yaml = require('js-yaml');
-var path = require('path');
-var glob = require('glob');
-var json = require('read-json');
-var fs = require('fs');
-var pkg = require('./package');
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-function Memory(options, utils) {
-  'use strict';
-  /* Utils */
-  var _ = utils._;
-  var debug = utils.debug('memory');
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  /* Initialize store */
-  this.data = {};
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/*Imports*/
 
-  /* Set path */
+var _yaml = require('js-yaml');
 
-  // Set defaults
-  options = _.defaults(options || {}, require('./defaults'));
-  // Set directory
-  this.directory = path.normalize(options.directory);
-  // Set extension
-  this.extension = options.extension;
-  // Set prefix
-  this.prefix = options.prefix;
+var _yaml2 = _interopRequireWildcard(_yaml);
 
-  // Check that the extension has a '.'
-  if (!/\./.test(this.extension))
-    this.extension = '.' + this.extension.replace('.yml', '.yaml');
+var _path = require('path');
 
-  debug('directory:', this.directory, 'extension:', this.extension);
+var _path2 = _interopRequireWildcard(_path);
 
-  // Setup which includes reading
-  this.set = function(callback) {
-    debug('fn:', 'set');
-    var _this = this;
-    var temp = {};
-    var path = this.directory + '*' + this.extension;
-    // Find all files and get the paths for each file
-    glob(path, function(error, files) {
-      debug('files:', files, 'errors:', error);
-      // Read if this is a JSON file.
-      if (/.json/.test(_this.extension)) {
-        // Iterate the files
-        _.forEach(files, function(file) {
-          debug('reading JSON file:', file);
-          // Read
-          json(file, function(error, data) {
-            // Normalize the file and store the data into temp
-            temp[_this.normalize(file.split('/').pop())] = data;
-            // Callback the data to set it to 'this.data'
-            callback(temp);
+var _glob = require('glob');
+
+var _glob2 = _interopRequireWildcard(_glob);
+
+var _json = require('read-json');
+
+var _json2 = _interopRequireWildcard(_json);
+
+var _fs = require('fs');
+
+var _fs2 = _interopRequireWildcard(_fs);
+
+var _import = require('lodash');
+
+var _import2 = _interopRequireWildcard(_import);
+
+var _d = require('debug');
+
+var _d2 = _interopRequireWildcard(_d);
+
+var _defaults2 = require('./defaults');
+
+var _defaults3 = _interopRequireWildcard(_defaults2);
+
+var debug = _d2['default']('default-backend');
+
+/* Memory Class */
+
+var Memory = (function () {
+  function Memory(options) {
+    _classCallCheck(this, Memory);
+
+    // Set options
+    this.options = options = _import2['default'].defaults(options, _defaults3['default']);
+    // Set directory
+    this.directory = _path2['default'].normalize(options.directory);
+    // Set extension
+    this.extension = options.extension;
+    // Set prefix
+    this.prefix = options.prefix;
+    // Check that the extension has a '.'
+    if (!/\./.test(this.extension)) this.extension = '.' + this.extension.replace('.yml', '.yaml');
+    //Set path
+    this.path = this.directory + '*' + this.extension;
+    this.data = {};
+    // Read all files
+    this.read();
+  }
+
+  _createClass(Memory, [{
+    key: 'read',
+
+    /* Read */
+    value: function read(callback) {
+      var dictionary = {};
+      // Pass the context as 'me' and
+      // read all the files with respect
+      // to its extension.
+      _glob2['default'](this.path, (function (me) {
+        return function (error, files) {
+          debug('files:', files, 'errors:', error);
+          // Read if this is a JSON file.
+          if (/.json/.test(me.extension)) files.forEach(function (file) {
+            return _json2['default'](file, function (error, data) {
+              dictionary[me.normalize(file.split('/').pop())] = data;
+              me.data = dictionary;
+              callback(dictionary);
+            });
           });
-        });
-      } else if (/.yaml/.test(_this.extension)) {
-        // Iterate the files
-        _.forEach(files, function(file) {
-          debug('reading YML file:', file);
-          // Read
-          fs.readFile(file, function(error, data) {
-            temp[_this.normalize(file.split('/').pop())] = yaml.safeLoad(data);
-            callback(temp);
+          // Read if this is a YAML file.
+          if (/.yaml/.test(me.extension)) files.forEach(function (file) {
+            return _fs2['default'].readFile(file, function (error, data) {
+              dictionary[me.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
+              me.data = dictionary;
+              callback(dictionary);
+            });
           });
-        });
-      }
-    });
-  };
+        };
+      })(this));
+    }
+  }, {
+    key: 'find',
 
-  this.normalize = function(file) {
-    file = file.toLowerCase().replace(this.extension, '').replace('_', '-');
-    if (file.indexOf(this.prefix) > -1) file = file.replace(this.prefix, '');
-    return file;
-  };
+    /* Find */
+    value: function find(locale) {
+      return this.data[locale];
+    }
+  }]);
 
-  var _this = this;
-  // Set the data
-  this.set(function(data) {
-    debug('data:', data);
-    _this.data = data;
-  });
-
-}
-
-// Mainly for Mocha tests
-Memory.prototype.getDataAsync = function(callback) {
-  'use strict';
-  this.set(function(data) {
-    callback(data);
-  });
-};
-
-// Find
-Memory.prototype.find = function(locale) {
-  'use strict';
-  return this.data[locale];
-};
-
-// Ship
-function memory() {
-  'use strict';
-  /*jshint validthis:true*/
-  this.backend = new Memory(this.plugins._backend.options,
-    this.utils);
-}
+  return Memory;
+})();
 
 // Export
-module.exports = function() {
+
+exports['default'] = function () {
   'use strict';
+  var pkg = require('./package.json');
   pkg.type = 'backend';
   return {
-    main: memory,
-    package: pkg
+    main: function main() {
+      this.backend = new Memory(this._backend.options);
+    },
+    'package': pkg
   };
 };
+
+module.exports = exports['default'];

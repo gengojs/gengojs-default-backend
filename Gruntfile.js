@@ -1,15 +1,26 @@
 module.exports = function(grunt) {
+  'use strict';
   require('load-grunt-tasks')(grunt);
   grunt.initConfig({
     jshint: {
-      src: ['index.js', 'modules/**/*.js', 'tests/**/*.js'],
+      src: ['lib/*.js', 'tests/**/*.js'],
       options: {
         jshintrc: '.jshintrc'
+      }
+    },
+    babel: {
+      options: {
+        sourceMap: false
+      },
+      dist: {
+        files: {
+          './index.js': 'lib/index.js'
+        }
       }
     }
   });
   grunt.registerTask('default', [
-    'jshint'
+    'jshint',
+    'babel'
   ]);
-
-}
+};
