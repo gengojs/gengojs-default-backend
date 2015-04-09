@@ -39,10 +39,6 @@ var _d = require('debug');
 
 var _d2 = _interopRequireWildcard(_d);
 
-var _defaults2 = require('./defaults');
-
-var _defaults3 = _interopRequireWildcard(_defaults2);
-
 var debug = _d2['default']('default-backend');
 
 /* Memory Class */
@@ -51,8 +47,6 @@ var Memory = (function () {
   function Memory(options) {
     _classCallCheck(this, Memory);
 
-    // Set options
-    this.options = options = _import2['default'].defaults(options, _defaults3['default']);
     // Set directory
     this.directory = _path2['default'].normalize(options.directory);
     // Set extension
@@ -74,25 +68,25 @@ var Memory = (function () {
     /* Read */
     value: function read(callback) {
       var dictionary = {};
-      // Pass the context as 'me' and
+      // Pass the context as '_this' and
       // read all the files with respect
       // to its extension.
-      _glob2['default'](this.path, (function (me) {
+      _glob2['default'](this.path, (function (_this) {
         return function (error, files) {
           debug('files:', files, 'errors:', error);
           // Read if this is a JSON file.
-          if (/.json/.test(me.extension)) files.forEach(function (file) {
+          if (/.json/.test(_this.extension)) files.forEach(function (file) {
             return _json2['default'](file, function (error, data) {
-              dictionary[me.normalize(file.split('/').pop())] = data;
-              me.data = dictionary;
+              dictionary[_this.normalize(file.split('/').pop())] = data;
+              _this.data = dictionary;
               callback(dictionary);
             });
           });
           // Read if this is a YAML file.
-          if (/.yaml/.test(me.extension)) files.forEach(function (file) {
+          if (/.yaml/.test(_this.extension)) files.forEach(function (file) {
             return _fs2['default'].readFile(file, function (error, data) {
-              dictionary[me.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
-              me.data = dictionary;
+              dictionary[_this.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
+              _this.data = dictionary;
               callback(dictionary);
             });
           });
@@ -115,13 +109,14 @@ var Memory = (function () {
 
 exports['default'] = function () {
   'use strict';
-  var pkg = require('./package.json');
-  pkg.type = 'backend';
   return {
     main: function main() {
-      this.backend = new Memory(this._backend.options);
+      this.backend = new Memory(this.options.backend);
     },
-    'package': pkg
+    'package': _import2['default'].merge({
+      type: 'backend'
+    }, require('./package')),
+    defaults: require('./defaults')
   };
 };
 
