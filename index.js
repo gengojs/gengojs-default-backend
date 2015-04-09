@@ -57,6 +57,7 @@ var Memory = (function () {
     if (!/\./.test(this.extension)) this.extension = '.' + this.extension.replace('.yml', '.yaml');
     //Set path
     this.path = this.directory + '*' + this.extension;
+    debug('directory:', this.directory);
     this.data = {};
     // Read all files
     this.read();
@@ -79,7 +80,7 @@ var Memory = (function () {
             return _json2['default'](file, function (error, data) {
               dictionary[_this.normalize(file.split('/').pop())] = data;
               _this.data = dictionary;
-              callback(dictionary);
+              if (_import2['default'].isFunction(callback)) callback(dictionary);
             });
           });
           // Read if this is a YAML file.
@@ -87,7 +88,7 @@ var Memory = (function () {
             return _fs2['default'].readFile(file, function (error, data) {
               dictionary[_this.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
               _this.data = dictionary;
-              callback(dictionary);
+              if (_import2['default'].isFunction(callback)) callback(dictionary);
             });
           });
         };
@@ -98,12 +99,12 @@ var Memory = (function () {
 
     /* Find */
     value: function find(locale) {
-      return this.data[locale];
+      return this.data[locale] || this.data[locale.toLowerCase()];
     }
   }, {
     key: 'normalize',
 
-    /*Normalize*/
+    /* Normalize */
     value: function normalize(file) {
       file = file.toLowerCase().replace(this.extension, '').replace('_', '-');
       if (file.indexOf(this.prefix) > -1) file = file.replace(this.prefix, '');

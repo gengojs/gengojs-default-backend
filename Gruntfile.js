@@ -17,10 +17,17 @@ module.exports = function(grunt) {
           './index.js': 'lib/index.js'
         }
       }
+    },
+    watch: {
+      babel: {
+        tasks: ['babel'],
+        files: 'lib/*.js'
+      }
     }
   });
   grunt.registerTask('default', [
     'jshint',
-    'babel'
+    'babel',
+    'watch'
   ]);
 };
