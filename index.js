@@ -100,6 +100,15 @@ var Memory = (function () {
     value: function find(locale) {
       return this.data[locale];
     }
+  }, {
+    key: 'normalize',
+
+    /*Normalize*/
+    value: function normalize(file) {
+      file = file.toLowerCase().replace(this.extension, '').replace('_', '-');
+      if (file.indexOf(this.prefix) > -1) file = file.replace(this.prefix, '');
+      return file;
+    }
   }]);
 
   return Memory;
