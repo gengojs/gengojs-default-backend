@@ -1,5 +1,6 @@
 {
   "directory": "./locales",
   "extension": "json",
-  "prefix": ""
+  "prefix": "",
+  "cache": true
 }
