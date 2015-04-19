@@ -23,6 +23,10 @@ var _glob = require('glob');
 
 var _glob2 = _interopRequireWildcard(_glob);
 
+var _globwatch = require('globwatcher');
+
+var _globwatch2 = _interopRequireWildcard(_globwatch);
+
 var _json = require('read-json');
 
 var _json2 = _interopRequireWildcard(_json);
@@ -45,6 +49,8 @@ var debug = _d2['default']('default-backend');
 
 var Memory = (function () {
   function Memory(options) {
+    var _this = this;
+
     _classCallCheck(this, Memory);
 
     // Set directory
@@ -53,14 +59,30 @@ var Memory = (function () {
     this.extension = options.extension;
     // Set prefix
     this.prefix = options.prefix;
+    // Set cache
+    this.cache = options.cache;
     // Check that the extension has a '.'
     if (!/\./.test(this.extension)) this.extension = '.' + this.extension.replace('.yml', '.yaml');
-    //Set path
+    // Set path
     this.path = this.directory + '*' + this.extension;
     debug('directory:', this.directory);
     this.data = {};
-    // Read all files
-    this.read();
+    // Check cache and read all files
+    if (this.cache) this.read();else {
+      var watcher = _globwatch2['default'].globwatcher(this.path);
+      watcher.on('changed', function () {
+        return _this.read();
+      });
+      watcher.on('added', function () {
+        return _this.read();
+      });
+      watcher.on('deleted', function () {
+        return _this.read();
+      });
+      watcher.ready.then(function () {
+        return debug('Memory is actively watching ' + _this.directory);
+      });
+    }
   }
 
   _createClass(Memory, [{
