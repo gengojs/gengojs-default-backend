@@ -100,21 +100,45 @@ var Memory = (function () {
           // Read if this is a JSON file.
           if (/.json/.test(_this.extension)) files.forEach(function (file) {
             return _json2['default'](file, function (error, data) {
-              dictionary[_this.normalize(file.split('/').pop())] = data;
-              _this.data = dictionary;
-              if (_import2['default'].isFunction(callback)) callback(dictionary);
+              try {
+                if (error || !data) throw new Error('Woops! Is your JSON file properly linted?');else {
+                  dictionary[_this.normalize(file.split('/').pop())] = data;
+                  _this.data = dictionary;
+                  if (_import2['default'].isFunction(callback)) callback(dictionary);
+                }
+              } catch (error) {
+                debug(error.stack || String(error));
+              }
             });
           });
           // Read if this is a YAML file.
           if (/.yaml/.test(_this.extension)) files.forEach(function (file) {
             return _fs2['default'].readFile(file, function (error, data) {
-              dictionary[_this.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
-              _this.data = dictionary;
-              if (_import2['default'].isFunction(callback)) callback(dictionary);
+              try {
+                if (error || !data) throw new Error('Woops! Is your YAML file properly linted?');else {
+                  dictionary[_this.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
+                  _this.data = dictionary;
+                  if (_import2['default'].isFunction(callback)) callback(dictionary);
+                }
+              } catch (error) {
+                debug(error.stack || String(error));
+              }
             });
+          });
+          // Read if this is a Javascript file.
+          if (!/.json/.test(_this.extension) && /.js/.test(_this.extension)) files.forEach(function (file) {
+            dictionary[_this.normalize(file.split('/').pop())] = require(file);
+            if (_import2['default'].isFunction(callback)) callback(dictionary);
           });
         };
       })(this));
+    }
+  }, {
+    key: 'catalog',
+
+    /* Catalog */
+    value: function catalog(locale) {
+      return locale ? this.find(locale) : this.data;
     }
   }, {
     key: 'find',
