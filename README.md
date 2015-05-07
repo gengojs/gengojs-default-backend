@@ -1,8 +1,8 @@
 # gengojs-default-memory
 
-The default memory backend plugin for gengojs.
+The default memory backend plugin for gengo.js.
 
-This module will be used for the upcoming [gengo.js](https://github.com/iwatakeshi/gengojs) **1.0.0**.
+This module will be used for [gengo.js](https://github.com/iwatakeshi/gengojs).
 
 An example usage with options is:
 

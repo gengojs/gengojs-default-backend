@@ -23,9 +23,26 @@ module.exports = function(grunt) {
         tasks: ['babel'],
         files: 'lib/*.js'
       }
+    },
+    simplemocha: {
+      all: {
+        src: 'test/*.js',
+        options: {
+          globals: ['should', 'it'],
+          timeout: 3000,
+          ignoreLeaks: false,
+          ui: 'bdd',
+          reporter: 'nyan'
+        }
+      }
     }
   });
   grunt.registerTask('default', [
+    'jshint',
+    'babel',
+    'simplemocha'
+  ]);
+  grunt.registerTask('dev', [
     'jshint',
     'babel',
     'watch'

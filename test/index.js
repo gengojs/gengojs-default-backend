@@ -49,5 +49,21 @@ describe('Memory', function() {
       });
 
     });
+    it('should read javascript', function() {
+      var gengo = new Core({
+        backend: {
+          directory: process.cwd() + '/fixtures/locales/',
+          extension: 'js'
+        }
+      }, memory());
+      gengo.backend.read(function(data) {
+        assert.deepEqual(data, {
+          en: {
+            Hello: 'World'
+          }
+        });
+      });
+
+    });
   });
 });

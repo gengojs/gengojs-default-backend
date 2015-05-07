@@ -1,49 +1,50 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
 /*Imports*/
 
-var _yaml = require('js-yaml');
+var _jsYaml = require('js-yaml');
 
-var _yaml2 = _interopRequireWildcard(_yaml);
+var _jsYaml2 = _interopRequireDefault(_jsYaml);
 
 var _path = require('path');
 
-var _path2 = _interopRequireWildcard(_path);
+var _path2 = _interopRequireDefault(_path);
 
 var _glob = require('glob');
 
-var _glob2 = _interopRequireWildcard(_glob);
+var _glob2 = _interopRequireDefault(_glob);
 
-var _globwatch = require('globwatcher');
+var _globwatcher = require('globwatcher');
 
-var _globwatch2 = _interopRequireWildcard(_globwatch);
+var _globwatcher2 = _interopRequireDefault(_globwatcher);
 
-var _json = require('read-json');
+var _readJson = require('read-json');
 
-var _json2 = _interopRequireWildcard(_json);
+var _readJson2 = _interopRequireDefault(_readJson);
 
 var _fs = require('fs');
 
-var _fs2 = _interopRequireWildcard(_fs);
+var _fs2 = _interopRequireDefault(_fs);
 
-var _import = require('lodash');
+var _lodash = require('lodash');
 
-var _import2 = _interopRequireWildcard(_import);
+var _lodash2 = _interopRequireDefault(_lodash);
 
-var _d = require('debug');
+var _debug = require('debug');
 
-var _d2 = _interopRequireWildcard(_d);
+var _debug2 = _interopRequireDefault(_debug);
 
-var debug = _d2['default']('default-backend');
+var debug = _debug2['default']('default-backend');
 
 /* Memory Class */
 
@@ -69,7 +70,7 @@ var Memory = (function () {
     this.data = {};
     // Check cache and read all files
     if (this.cache) this.read();else {
-      var watcher = _globwatch2['default'].globwatcher(this.path);
+      var watcher = _globwatcher2['default'].globwatcher(this.path);
       watcher.on('changed', function () {
         return _this.read();
       });
@@ -99,12 +100,12 @@ var Memory = (function () {
           debug('files:', files, 'errors:', error);
           // Read if this is a JSON file.
           if (/.json/.test(_this.extension)) files.forEach(function (file) {
-            return _json2['default'](file, function (error, data) {
+            return _readJson2['default'](file, function (error, data) {
               try {
                 if (error || !data) throw new Error('Woops! Is your JSON file properly linted?');else {
                   dictionary[_this.normalize(file.split('/').pop())] = data;
                   _this.data = dictionary;
-                  if (_import2['default'].isFunction(callback)) callback(dictionary);
+                  if (_lodash2['default'].isFunction(callback)) callback(dictionary);
                 }
               } catch (error) {
                 debug(error.stack || String(error));
@@ -116,9 +117,9 @@ var Memory = (function () {
             return _fs2['default'].readFile(file, function (error, data) {
               try {
                 if (error || !data) throw new Error('Woops! Is your YAML file properly linted?');else {
-                  dictionary[_this.normalize(file.split('/').pop())] = _yaml2['default'].safeLoad(data);
+                  dictionary[_this.normalize(file.split('/').pop())] = _jsYaml2['default'].safeLoad(data);
                   _this.data = dictionary;
-                  if (_import2['default'].isFunction(callback)) callback(dictionary);
+                  if (_lodash2['default'].isFunction(callback)) callback(dictionary);
                 }
               } catch (error) {
                 debug(error.stack || String(error));
@@ -128,7 +129,7 @@ var Memory = (function () {
           // Read if this is a Javascript file.
           if (!/.json/.test(_this.extension) && /.js/.test(_this.extension)) files.forEach(function (file) {
             dictionary[_this.normalize(file.split('/').pop())] = require(file);
-            if (_import2['default'].isFunction(callback)) callback(dictionary);
+            if (_lodash2['default'].isFunction(callback)) callback(dictionary);
           });
         };
       })(this));
@@ -169,7 +170,7 @@ exports['default'] = function () {
     main: function main() {
       this.backend = new Memory(this.options.backend);
     },
-    'package': _import2['default'].merge({
+    'package': _lodash2['default'].merge({
       type: 'backend'
     }, require('./package')),
     defaults: require('./defaults')
