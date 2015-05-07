@@ -4,7 +4,7 @@
   "description": "The default memory backend plugin for gengojs",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/"
+    "test": "grunt"
   },
   "repository": {
     "type": "git",
