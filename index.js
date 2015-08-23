@@ -103,7 +103,7 @@ var Memory = (function () {
           if (/.json/.test(_this.extension)) files.forEach(function (file) {
             return (0, _readJson2['default'])(file, function (error, data) {
               try {
-                if (error || !data) throw new Error('Woops! Is your JSON file properly linted?');else {
+                if (error || !data) throw new Error('Woops! Is your JSON file in proper format?');else {
                   dictionary[_this.normalize(file.split('/').pop())] = data;
                   _this.data = dictionary;
                   if (_lodash2['default'].isFunction(callback)) callback(dictionary);
@@ -117,7 +117,7 @@ var Memory = (function () {
           if (/.yaml/.test(_this.extension)) files.forEach(function (file) {
             return _fs2['default'].readFile(file, function (error, data) {
               try {
-                if (error || !data) throw new Error('Woops! Is your YAML file properly linted?');else {
+                if (error || !data) throw new Error('Woops! Is your YAML file in proper format?');else {
                   dictionary[_this.normalize(file.split('/').pop())] = _jsYaml2['default'].safeLoad(data);
                   _this.data = dictionary;
                   if (_lodash2['default'].isFunction(callback)) callback(dictionary);
