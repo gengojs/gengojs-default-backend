@@ -1,3 +1,4 @@
+/*Imports*/
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9,8 +10,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-/*Imports*/
 
 var _jsYaml = require('js-yaml');
 
@@ -44,13 +43,13 @@ var _debug = require('debug');
 
 var _debug2 = _interopRequireDefault(_debug);
 
-var debug = _debug2['default']('default-backend');
+var debug = (0, _debug2['default'])('default-backend');
 
 /* Memory Class */
 
 var Memory = (function () {
   function Memory(options) {
-    var _this = this;
+    var _this2 = this;
 
     _classCallCheck(this, Memory);
 
@@ -72,35 +71,37 @@ var Memory = (function () {
     if (this.cache) this.read();else {
       var watcher = _globwatcher2['default'].globwatcher(this.path);
       watcher.on('changed', function () {
-        return _this.read();
+        return _this2.read();
       });
       watcher.on('added', function () {
-        return _this.read();
+        return _this2.read();
       });
       watcher.on('deleted', function () {
-        return _this.read();
+        return _this2.read();
       });
       watcher.ready.then(function () {
-        return debug('Memory is actively watching ' + _this.directory);
+        return debug('Memory is actively watching ' + _this2.directory);
       });
     }
   }
 
+  // Export
+
+  /* Read */
+
   _createClass(Memory, [{
     key: 'read',
-
-    /* Read */
     value: function read(callback) {
       var dictionary = {};
       // Pass the context as '_this' and
       // read all the files with respect
       // to its extension.
-      _glob2['default'](this.path, (function (_this) {
+      (0, _glob2['default'])(this.path, (function (_this) {
         return function (error, files) {
           debug('files:', files, 'errors:', error);
           // Read if this is a JSON file.
           if (/.json/.test(_this.extension)) files.forEach(function (file) {
-            return _readJson2['default'](file, function (error, data) {
+            return (0, _readJson2['default'])(file, function (error, data) {
               try {
                 if (error || !data) throw new Error('Woops! Is your JSON file properly linted?');else {
                   dictionary[_this.normalize(file.split('/').pop())] = data;
@@ -134,24 +135,24 @@ var Memory = (function () {
         };
       })(this));
     }
-  }, {
-    key: 'catalog',
 
     /* Catalog */
+  }, {
+    key: 'catalog',
     value: function catalog(locale) {
       return locale ? this.find(locale) : this.data;
     }
-  }, {
-    key: 'find',
 
     /* Find */
+  }, {
+    key: 'find',
     value: function find(locale) {
       return this.data[locale] || this.data[locale.toLowerCase()];
     }
-  }, {
-    key: 'normalize',
 
     /* Normalize */
+  }, {
+    key: 'normalize',
     value: function normalize(file) {
       file = file.toLowerCase().replace(this.extension, '').replace('_', '-');
       if (file.indexOf(this.prefix) > -1) file = file.replace(this.prefix, '');
@@ -161,8 +162,6 @@ var Memory = (function () {
 
   return Memory;
 })();
-
-// Export
 
 exports['default'] = function () {
   'use strict';
