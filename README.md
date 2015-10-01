@@ -2,9 +2,15 @@
 
 The default memory backend plugin for gengo.js.
 
-[![Build Status](https://travis-ci.org/iwatakeshi/gengojs-default-backend.svg?branch=master)](https://travis-ci.org/iwatakeshi/gengojs-default-backend)
+[![Build Status](https://travis-ci.org/gengojs/plugin-backend.svg)](https://travis-ci.org/gengojs/plugin-backend)
 
-This module will be used for [gengo.js](https://github.com/iwatakeshi/gengojs).
+This module will be used for [gengo.js](https://github.com/gengojs/gengojs).
+
+## Documentation
+
+See [documentation](https://gengojs.github.io/plugin-backend).
+
+## Usage
 
 An example usage with options is:
 
@@ -80,7 +86,7 @@ DEBUG=default-backend
 Windows:
 
 ```bash
-SET DEBUG=default-backend
+SET DEBUG=gengo.backend
 ```
 ## Contribute
 

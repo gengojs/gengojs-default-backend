@@ -4,27 +4,28 @@
   "description": "The default memory backend plugin for gengojs",
   "main": "src/index.js",
   "scripts": {
-    "test": "grunt"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/iwatakeshi/gengojs-default-backend.git"
+    "url": "https://github.com/gengojs/plugin-backend.git"
   },
   "keywords": [
     "i18n",
     "i10n",
     "translate",
     "gengo",
-    "gengojs"
+    "gengojs",
+    "gengojs-plugin"
   ],
   "author": {
     "name": "iwatakeshi"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iwatakeshi/gengojs-default-backend/issues"
+    "url": "https://github.com/gengojs/plugin-backend/issues"
   },
-  "homepage": "https://github.com/iwatakeshi/gengojs-default-backend",
+  "homepage": "https://github.com/gengojs/plugin-backend",
   "dependencies": {
     "gengojs-debug": "^2.0.4",
     "glob": "^5.0.15",
