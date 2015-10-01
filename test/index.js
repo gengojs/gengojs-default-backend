@@ -1,14 +1,14 @@
 /*global describe, it*/
 var chai = require('chai');
 var assert = chai.assert;
-var Core = require('gengojs-core');
-var memory = require('../');
+var core = require('gengojs-core');
+var memory = require('../src/');
 
 describe('Memory', function() {
   'use strict';
   describe('load plugin', function() {
     it('should exist Gengo', function() {
-      var gengo = new Core({
+      var gengo = core({
         backend: {
           directory: process.cwd() + '/fixtures/locales/'
         }
@@ -19,7 +19,7 @@ describe('Memory', function() {
 
   describe('read files', function() {
     it('should read json', function() {
-      var gengo = new Core({
+      var gengo = core({
         backend: {
           directory: process.cwd() + '/fixtures/locales/'
         }
@@ -34,7 +34,7 @@ describe('Memory', function() {
       });
     });
     it('should read yaml', function() {
-      var gengo = new Core({
+      var gengo = core({
         backend: {
           directory: process.cwd() + '/fixtures/locales/',
           extension: 'yaml'
@@ -50,7 +50,7 @@ describe('Memory', function() {
 
     });
     it('should read javascript', function() {
-      var gengo = new Core({
+      var gengo = core({
         backend: {
           directory: process.cwd() + '/fixtures/locales/',
           extension: 'js'

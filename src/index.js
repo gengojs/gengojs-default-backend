@@ -39,11 +39,11 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _debug = require('debug');
+var _gengojsDebug = require('gengojs-debug');
 
-var _debug2 = _interopRequireDefault(_debug);
+var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
-var debug = (0, _debug2['default'])('default-backend');
+var log = (0, _gengojsDebug2['default'])('backend');
 
 /* Memory Class */
 
@@ -65,7 +65,7 @@ var Memory = (function () {
     if (!/\./.test(this.extension)) this.extension = '.' + this.extension.replace('.yml', '.yaml');
     // Set path
     this.path = this.directory + '*' + this.extension;
-    debug('directory:', this.directory);
+    log.debug('directory:', this.directory);
     this.data = {};
     // Check cache and read all files
     if (this.cache) this.read();else {
@@ -80,7 +80,7 @@ var Memory = (function () {
         return _this2.read();
       });
       watcher.ready.then(function () {
-        return debug('Memory is actively watching ' + _this2.directory);
+        return log.info('Memory is actively watching ' + _this2.directory);
       });
     }
   }
@@ -98,7 +98,7 @@ var Memory = (function () {
       // to its extension.
       (0, _glob2['default'])(this.path, (function (_this) {
         return function (error, files) {
-          debug('files:', files, 'errors:', error);
+          log.debug('files:', files, 'errors:', error);
           // Read if this is a JSON file.
           if (/.json/.test(_this.extension)) files.forEach(function (file) {
             return (0, _readJson2['default'])(file, function (error, data) {
@@ -109,7 +109,7 @@ var Memory = (function () {
                   if (_lodash2['default'].isFunction(callback)) callback(dictionary);
                 }
               } catch (error) {
-                debug(error.stack || String(error));
+                log.error(error.stack || String(error));
               }
             });
           });
@@ -123,7 +123,7 @@ var Memory = (function () {
                   if (_lodash2['default'].isFunction(callback)) callback(dictionary);
                 }
               } catch (error) {
-                debug(error.stack || String(error));
+                log.error(error.stack || String(error));
               }
             });
           });
@@ -171,9 +171,10 @@ exports['default'] = function () {
     },
     'package': _lodash2['default'].merge({
       type: 'backend'
-    }, require('./package')),
-    defaults: require('./defaults')
+    }, require('../package')),
+    defaults: require('../defaults')
   };
 };
 
 module.exports = exports['default'];
+//# sourceMappingURL=source maps/index.js.map
