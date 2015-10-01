@@ -44,8 +44,10 @@ var _gengojsDebug = require('gengojs-debug');
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
 var log = (0, _gengojsDebug2['default'])('backend');
-
-/* Memory Class */
+/**
+ * This class manages the backend for gengojs.
+ * @class Memory
+ */
 
 var Memory = (function () {
   function Memory(options) {
@@ -87,7 +89,12 @@ var Memory = (function () {
 
   // Export
 
-  /* Read */
+  /**
+   * Loads the dictionary asyncronously 
+   * and calls the callback when all is done.
+   * @param  {Function} callback The callback function
+   * @return {Object}            The dictionary
+   */
 
   _createClass(Memory, [{
     key: 'read',
@@ -136,21 +143,45 @@ var Memory = (function () {
       })(this));
     }
 
-    /* Catalog */
+    /**
+     * Returns the entire dictionary
+     * @param  {String} locale The key to the dictionary.
+     * @return {Object}        The dictionary
+     */
   }, {
     key: 'catalog',
     value: function catalog(locale) {
       return locale ? this.find(locale) : this.data;
     }
 
-    /* Find */
+    /**
+     * Searches for the dictionary
+     * @param  {String} locale The key to the dictionary.
+     * @return {Object}        The dictionary for the specified locale.
+     */
   }, {
     key: 'find',
     value: function find(locale) {
       return this.data[locale] || this.data[locale.toLowerCase()];
     }
 
-    /* Normalize */
+    /** 
+     * Determines whether the dictionary exists
+     * @param  {String}  locale The key to the dictionary.
+     * @return {Boolean}        True if the locale exists.
+     */
+  }, {
+    key: 'has',
+    value: function has(locale) {
+      return this.data[locale] || this.data[locale.toLowerCase()] ? true : false;
+    }
+
+    /**
+     * Normalizes the files
+     * @param  {String} file The file path.
+     * @return {String}      The normalized file path.
+     * @private
+     */
   }, {
     key: 'normalize',
     value: function normalize(file) {
