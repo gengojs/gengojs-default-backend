@@ -30,7 +30,7 @@
                   </li>
                   <li><a href="#find"><i class="alert alert-info"></i><span>find</span></a>
                   </li>
-                  <li><a href="#normalize"><i class="alert alert-info"></i><span>normalize</span></a>
+                  <li><a href="#has"><i class="alert alert-info"></i><span>has</span></a>
                   </li>
                 </ul></a></li>
           </ul>
@@ -53,7 +53,7 @@ var log = debug('backend');</code></pre>
               <div class="label label-success radius ctx-type">class</div><span>&nbsp;</span><span>new Memory()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Memory Class</p></div>
+          <div class="description"><p>This class manages the backend for gengojs.</p></div>
           <pre><code class="language-javascript">class Memory {
   constructor(options) {
       // Set directory
@@ -89,7 +89,28 @@ var log = debug('backend');</code></pre>
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Memory.prototype.read()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Read</p></div>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>callback</td>
+                <td>Function</td>
+                <td><p>The callback function</p></td>
+              </tr>
+              <tr>
+                <td>return</td>
+                <td>Object</td>
+                <td><p>The dictionary</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Loads the dictionary asyncronously<br />and calls the callback when all is done.</p></div>
           <pre><code class="language-javascript">read(callback) {
     var dictionary = {};
     // Pass the context as '_this' and 
@@ -147,7 +168,28 @@ var log = debug('backend');</code></pre>
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Memory.prototype.catalog()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Catalog</p></div>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>locale</td>
+                <td>String</td>
+                <td><p>The key to the dictionary.</p></td>
+              </tr>
+              <tr>
+                <td>return</td>
+                <td>Object</td>
+                <td><p>The dictionary</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Returns the entire dictionary</p></div>
           <pre><code class="language-javascript">catalog(locale) {
     return locale ? this.find(locale) : this.data;
   }</code></pre>
@@ -158,39 +200,63 @@ var log = debug('backend');</code></pre>
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Memory.prototype.find()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Find</p></div>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>locale</td>
+                <td>String</td>
+                <td><p>The key to the dictionary.</p></td>
+              </tr>
+              <tr>
+                <td>return</td>
+                <td>Object</td>
+                <td><p>The dictionary for the specified locale.</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Searches for the dictionary</p></div>
           <pre><code class="language-javascript">find(locale) {
     return this.data[locale] || this.data[locale.toLowerCase()];
   }</code></pre>
-          <section id="normalize">
-            <h1>normalize</h1>
+          <section id="has">
+            <h1>has</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Memory.prototype.normalize()</span><span>&nbsp;</span>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Memory.prototype.has()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Normalize</p></div>
-          <pre><code class="language-javascript">normalize(file) {
-  file = file.toLowerCase().replace(this.extension, '').replace('_', '-');
-  if (file.indexOf(this.prefix) &gt; -1) file = file.replace(this.prefix, '');
-  return file;
-}
-}
-
-// Export
-export
-default () =&gt; {
-'use strict';
-return {
-  main: function() {
-    this.backend = new Memory(this.options.backend);
-  },
-  package: _.merge({
-    type: 'backend'
-  }, require('../package')),
-  defaults: require('../defaults')
-};
-};</code></pre>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>locale</td>
+                <td>String</td>
+                <td><p>The key to the dictionary.</p></td>
+              </tr>
+              <tr>
+                <td>return</td>
+                <td>Boolean</td>
+                <td><p>True if the locale exists.</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Determines whether the dictionary exists</p></div>
+          <pre><code class="language-javascript">has(locale) {
+    return (this.data[locale] || this.data[locale.toLowerCase()]) ? true : false;
+  }</code></pre>
           <div class="footer site-footer">
             <div class="span site-footer-owner"><a href="https://github.com/mr-doc/mr-doc-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
             <div class="span site-footer-credits">This page was generated by <a href="https://github.com/mr-doc/mr-doc">Mr. Doc</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>
