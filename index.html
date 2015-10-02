@@ -70,9 +70,18 @@ app.use(gengo({
 </ul>
 <h2>Internal API</h2>
 <ul>
-<li><code>find(locale:String)</code> returns the data by locale.</li>
-<li><code>catalog(locale:String)</code> returns the catalog by locale or the entire catalog.</li>
+<li><code>find(locale:String)</code>
+<ul>
+<li>Should return the dictionary by locale</li>
 </ul>
+</li>
+<li><code>catalog(locale:String)</code>
+<ul>
+<li>Should return the dictionary by locale or the entire dictionary.</li>
+</ul>
+</li>
+</ul>
+<p>For more see <a href="https://gengojs.github.io/plugin-backend">documentation</a></p>
 <p><strong>Example</strong>:</p>
 <pre><code class="language-js">// Plugin ship
 function ship(){
@@ -82,10 +91,10 @@ function ship(){
 }
 </code></pre>
 <h2>Dependencies</h2>
-<p>None</p>
+<p>Not Applicable</p>
 <h2>Debug</h2>
 <p>Unix:</p>
-<pre><code class="language-bash">DEBUG=default-backend
+<pre><code class="language-bash">DEBUG=gengo.backend
 </code></pre>
 <p>Windows:</p>
 <pre><code class="language-bash">SET DEBUG=gengo.backend
