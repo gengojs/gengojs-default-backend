@@ -58,8 +58,12 @@ The supported file types are:
 
 ## Internal API
 
-* `find(locale:String)` returns the data by locale.
-* `catalog(locale:String)` returns the catalog by locale or the entire catalog.
+* `find(locale:String)`
+  * Should return the dictionary by locale
+* `catalog(locale:String)` 
+  * Should return the dictionary by locale or the entire dictionary.
+
+For more see [documentation](https://gengojs.github.io/plugin-backend)
 
 **Example**:
 
@@ -74,14 +78,14 @@ function ship(){
 
 ## Dependencies
 
-None
+Not Applicable
 
 ## Debug
 
 Unix:
 
 ```bash
-DEBUG=default-backend
+DEBUG=gengo.backend
 ```
 Windows:
 
