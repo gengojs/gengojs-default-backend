@@ -65,17 +65,6 @@ The supported file types are:
 
 For more see [documentation](https://gengojs.github.io/plugin-backend)
 
-**Example**:
-
-```js
-// Plugin ship
-function ship(){
-	// Context
-	this.backend.find('en');
-	this.backend.catalog('ja');
-}
-```
-
 ## Dependencies
 
 Not Applicable
@@ -92,6 +81,9 @@ Windows:
 ```bash
 SET DEBUG=gengo.backend
 ```
+
+See [gengojs-debug](https://github.com/gengojs/gengojs-debug) for usage.
+
 ## Contribute
 
 Feel free to contribute or even fork the project. This plugin has been
