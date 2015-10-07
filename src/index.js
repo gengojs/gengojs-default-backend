@@ -56,7 +56,10 @@ var Memory = (function () {
     _classCallCheck(this, Memory);
 
     // Set directory
-    this.directory = _path2['default'].normalize(options.directory);
+    this.directory = (function () {
+      var directory = _path2['default'].normalize(options.directory);
+      if (directory[directory.length - 1] !== _path2['default'].sep) return directory + _path2['default'].sep;else return directory;
+    })();
     // Set extension
     this.extension = options.extension;
     // Set prefix
