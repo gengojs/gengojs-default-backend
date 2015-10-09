@@ -85,7 +85,8 @@ var Memory = (function () {
         return _this2.read();
       });
       watcher.ready.then(function () {
-        return log.info('Memory is actively watching ' + _this2.directory);
+        _this2.read();
+        log.info('Memory is actively watching ' + _this2.directory);
       });
     }
   }
