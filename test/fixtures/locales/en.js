@@ -1,3 +1,3 @@
-{
+module.exports = {
   "Hello": "World"
-}
+};

@@ -43,6 +43,10 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+var _toml = require('toml');
+
+var _toml2 = _interopRequireDefault(_toml);
+
 var log = (0, _gengojsDebug2['default'])('backend');
 /**
  * This class manages the backend for gengojs.
@@ -51,7 +55,7 @@ var log = (0, _gengojsDebug2['default'])('backend');
 
 var Memory = (function () {
   function Memory(options) {
-    var _this2 = this;
+    var _this = this;
 
     _classCallCheck(this, Memory);
 
@@ -76,17 +80,17 @@ var Memory = (function () {
     if (this.cache) this.read();else {
       var watcher = _globwatcher2['default'].globwatcher(this.path);
       watcher.on('changed', function () {
-        return _this2.read();
+        return _this.read();
       });
       watcher.on('added', function () {
-        return _this2.read();
+        return _this.read();
       });
       watcher.on('deleted', function () {
-        return _this2.read();
+        return _this.read();
       });
       watcher.ready.then(function () {
-        _this2.read();
-        log.info('Memory is actively watching ' + _this2.directory);
+        _this.read();
+        log.info('Memory is actively watching ' + _this.directory);
       });
     }
   }
@@ -103,20 +107,35 @@ var Memory = (function () {
   _createClass(Memory, [{
     key: 'read',
     value: function read(callback) {
+      var _this2 = this;
+
       var dictionary = {};
-      // Pass the context as '_this' and
-      // read all the files with respect
-      // to its extension.
-      (0, _glob2['default'])(this.path, (function (_this) {
+      // Pass the context as 'this' and
+      //read all the files with respect to its extension.
+      (0, _glob2['default'])(this.path, (function () {
         return function (error, files) {
           log.debug('files:', files, 'errors:', error);
           // Read if this is a JSON file.
-          if (/.json/.test(_this.extension)) files.forEach(function (file) {
+          if (/.json/.test(_this2.extension)) files.forEach(function (file) {
             return (0, _readJson2['default'])(file, function (error, data) {
               try {
-                if (error || !data) throw new Error('Woops! Is your JSON file in proper format?');else {
-                  dictionary[_this.normalize(file.split('/').pop())] = data;
-                  _this.data = dictionary;
+                if (error || !data) throw new Error('Whoops! Is your JSON file in proper format?');else {
+                  dictionary[_this2.normalize(file.split('/').pop())] = data;
+                  _this2.data = dictionary;
+                  if (_lodash2['default'].isFunction(callback)) callback(dictionary);
+                }
+              } catch (error) {
+                log.error(error.stack || String(error));
+              }
+            });
+          });
+          // Read if this is a TOML file.
+          if (/.toml/.test(_this2.extension)) files.forEach(function (file) {
+            return _fs2['default'].readFile(file, function (error, data) {
+              try {
+                if (error || !data) throw new Error('Whoops! Is your YAML file in proper format?');else {
+                  dictionary[_this2.normalize(file.split('/').pop())] = _toml2['default'].parse(data);
+                  _this2.data = dictionary;
                   if (_lodash2['default'].isFunction(callback)) callback(dictionary);
                 }
               } catch (error) {
@@ -125,12 +144,12 @@ var Memory = (function () {
             });
           });
           // Read if this is a YAML file.
-          if (/.yaml/.test(_this.extension)) files.forEach(function (file) {
+          if (/.yaml/.test(_this2.extension)) files.forEach(function (file) {
             return _fs2['default'].readFile(file, function (error, data) {
               try {
-                if (error || !data) throw new Error('Woops! Is your YAML file in proper format?');else {
-                  dictionary[_this.normalize(file.split('/').pop())] = _jsYaml2['default'].safeLoad(data);
-                  _this.data = dictionary;
+                if (error || !data) throw new Error('Whoops! Is your YAML file in proper format?');else {
+                  dictionary[_this2.normalize(file.split('/').pop())] = _jsYaml2['default'].safeLoad(data);
+                  _this2.data = dictionary;
                   if (_lodash2['default'].isFunction(callback)) callback(dictionary);
                 }
               } catch (error) {
@@ -139,12 +158,12 @@ var Memory = (function () {
             });
           });
           // Read if this is a Javascript file.
-          if (!/.json/.test(_this.extension) && /.js/.test(_this.extension)) files.forEach(function (file) {
-            dictionary[_this.normalize(file.split('/').pop())] = require(file);
+          if (!/.json/.test(_this2.extension) && /.js/.test(_this2.extension)) files.forEach(function (file) {
+            dictionary[_this2.normalize(file.split('/').pop())] = require(file);
             if (_lodash2['default'].isFunction(callback)) callback(dictionary);
           });
         };
-      })(this));
+      })());
     }
 
     /**

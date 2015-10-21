@@ -48,7 +48,21 @@ describe('Memory', function() {
           }
         });
       });
-
+    });
+    it('should read toml', function() {
+      var gengo = core({
+        backend: {
+          directory: path.join(__dirname, '/fixtures/locales'),
+          extension: 'toml'
+        }
+      }, memory());
+      gengo.backend.read(function(data) {
+        assert.deepEqual(data, {
+          en: {
+            Hello: 'World'
+          }
+        });
+      });
     });
     it('should read javascript', function() {
       var gengo = core({
