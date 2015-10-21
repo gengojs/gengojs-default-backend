@@ -45,7 +45,8 @@ import json from 'read-json';
 import fs from 'fs';
 import _ from 'lodash';
 import debug from 'gengojs-debug';
-var log = debug('backend');</code></pre>
+import toml from 'toml';
+const log = debug('backend');</code></pre>
           <section id="Memory">
             <h1>Memory</h1>
             <h5 class="subheader"></h5>
@@ -83,8 +84,10 @@ var log = debug('backend');</code></pre>
         watcher.on('changed', () =&gt; this.read());
         watcher.on('added', () =&gt; this.read());
         watcher.on('deleted', () =&gt; this.read());
-        watcher.ready.then(() =&gt;
-          log.info('Memory is actively watching ' + this.directory));
+        watcher.ready.then(() =&gt; {
+          this.read();
+          log.info('Memory is actively watching ' + this.directory);
+        });
       }
     }</code></pre>
           <section id="read">
@@ -118,39 +121,54 @@ var log = debug('backend');</code></pre>
           <div class="description"><p>Loads the dictionary asyncronously<br />and calls the callback when all is done.</p></div>
           <pre><code class="language-javascript">read(callback) {
     var dictionary = {};
-    // Pass the context as '_this' and 
-    // read all the files with respect
-    // to its extension.
-    glob(this.path, ((_this) =&gt; {
+    // Pass the context as 'this' and 
+    //read all the files with respect to its extension.
+    glob(this.path, (() =&gt; {
       return (error, files) =&gt; {
         log.debug('files:', files, 'errors:', error);
         // Read if this is a JSON file.
-        if (/.json/.test(_this.extension))
+        if (/.json/.test(this.extension))
           files.forEach(file =&gt; json(file, (error, data) =&gt; {
             try {
               if (error || !data)
-                throw new Error('Woops! Is your JSON file in proper format?');
+                throw new Error('Whoops! Is your JSON file in proper format?');
               else {
-                dictionary[_this.normalize(file.split('/').pop())] = data;
-                _this.data = dictionary;
+                dictionary[this.normalize(file.split('/').pop())] = data;
+                this.data = dictionary;
                 if (_.isFunction(callback)) callback(dictionary);
               }
             } catch (error) {
               log.error(error.stack || String(error));
             }
-
           }));
-        // Read if this is a YAML file.
-        if (/.yaml/.test(_this.extension))
+        // Read if this is a TOML file.
+        if (/.toml/.test(this.extension))
           files.forEach(file =&gt; fs.readFile(file, (error, data) =&gt; {
             try {
               if (error || !data)
-                throw new Error('Woops! Is your YAML file in proper format?');
+                throw new Error('Whoops! Is your YAML file in proper format?');
               else {
                 dictionary[
-                  _this.normalize(file.split('/').pop())
+                  this.normalize(file.split('/').pop())
+                ] = toml.parse(data);
+                this.data = dictionary;
+                if (_.isFunction(callback)) callback(dictionary);
+              }
+            } catch (error) {
+              log.error(error.stack || String(error));
+            }
+          }));
+        // Read if this is a YAML file.
+        if (/.yaml/.test(this.extension))
+          files.forEach(file =&gt; fs.readFile(file, (error, data) =&gt; {
+            try {
+              if (error || !data)
+                throw new Error('Whoops! Is your YAML file in proper format?');
+              else {
+                dictionary[
+                  this.normalize(file.split('/').pop())
                 ] = yaml.safeLoad(data);
-                _this.data = dictionary;
+                this.data = dictionary;
                 if (_.isFunction(callback)) callback(dictionary);
               }
             } catch (error) {
@@ -158,13 +176,13 @@ var log = debug('backend');</code></pre>
             }
           }));
         // Read if this is a Javascript file.
-        if (!/.json/.test(_this.extension) &amp;&amp; /.js/.test(_this.extension))
+        if (!/.json/.test(this.extension) &amp;&amp; /.js/.test(this.extension))
           files.forEach(file =&gt; {
-            dictionary[_this.normalize(file.split('/').pop())] = require(file);
+            dictionary[this.normalize(file.split('/').pop())] = require(file);
             if (_.isFunction(callback)) callback(dictionary);
           });
       };
-    })(this));
+    })());
   }</code></pre>
           <section id="catalog">
             <h1>catalog</h1>
