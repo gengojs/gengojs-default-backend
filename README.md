@@ -53,6 +53,7 @@ The supported file types are:
 
 * `.json`
 * `.yaml`
+* `.toml`
 * `.js`
 
 
